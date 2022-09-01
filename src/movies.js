@@ -5,7 +5,7 @@ class movies extends React.Component{
     render(){
         return (
             <div>
-            {this.props.movieData.map((item)=>{
+            {this.props.MovieData.map((item)=>{
                 return (
                     <movie item={item}/>
                 );
