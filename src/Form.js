@@ -1,6 +1,6 @@
 import React from "react";
-
 import axios from "axios";
+
 
 
 
@@ -14,8 +14,10 @@ class Form extends React.Component{
             displayName:'',
             lon:'',
             lat:'',
+            imgUrl:'',
             mapFlag:false,
-            error:true
+            err:'',
+            error:false
             
         }
     }
@@ -23,10 +25,10 @@ class Form extends React.Component{
 
     getLocationDate = async (e) => {
         e.preventDefault();
-        const Key =  "pk.10357c1ba2083965ce77883210d40fcd";
+        
         const Name =e.target.cityName.value; 
         
-        const URL =`https://us1.locationiq.com/v1/search?key=${Key}&q=${Name}&format=json`;
+        const URL =`https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_KEY}&q=${Name}&format=json`;
     
 
         try {
@@ -35,13 +37,21 @@ class Form extends React.Component{
                 displayName:resResult.data[0].display_name,
                 lon :resResult.data[0].lon,
                 lat :resResult.data[0].lat,
-                mapFlag:true
+                imgUrl:`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_KEY}&center=${resResult.data[0].lat},${resResult.data[0].lon}`,
+                mapFlag:true,
+                error:false,
+                err:''
                 
             })
         }
         catch{
             this.setState({
-            error:true,
+                displayName:"",
+                lon :'',
+                lat :'',
+                mapFlag:false,
+                error:true,
+                err:"something wrong !"
             
         });
     }
@@ -56,18 +66,24 @@ class Form extends React.Component{
                 <input type="text" name="cityName" placeholder='Enter city'></input>
                 <button type='submit'>Explor!</button>
             </form>
-            
-           <h3> displayName:{this.state.displayName}</h3>
-            <h3>lon:{this.state.lon}</h3>
-            <h3>lat:{this.state.lat}</h3>
-            {this.state.mapFlag && <img src={`https://maps.locationiq.com/v3/staticmap?key=${
-              this.state.key}&center=${this.state.lat},${this.state.lon}&zoom=${18}&size=610x300`}></img>}
-            
-            {this.state.error && <h4>sorry something wrong!</h4>}
- 
-             </div>
+                   
+                      <h3>Display Name : {this.state.displayName}</h3>
+                      <h3>latitude :{this.state.lat}</h3>
+                      <h3>longitude:{this.state.lon}</h3>
+                      {this.state.imgFlag &&  this.state.imgUrl }
+                      {this.state.error && this.state.err}
 
-        )
+            
+                    
+        
+                      
+                      
+                  
+            
+ 
+        </div>
+
+        );
     }
 }
 export default Form;
